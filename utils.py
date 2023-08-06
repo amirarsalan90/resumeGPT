@@ -23,10 +23,11 @@ GPT_MODEL_LONG = "gpt-3.5-turbo-16k"
 MAX_TOKENS = 3500
 
 
-class ExtractionSchema(BaseModel):
+class ExtractionSchemaFromCV(BaseModel):
     person_name: str
     person_education: str
     person_work_experience: str
+    person_skills: str
 
 
 class ExtractionPerson(BaseModel):

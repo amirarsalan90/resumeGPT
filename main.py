@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 from pypdf import PdfReader
 from utils import (clean_string, convert_elements_to_strings, get_best_candidate, 
-                   get_cv_summary, get_job_summary, shorten, ExtractionSchema, ExtractionPersonSkill, get_person_skill_matches, plot_people_skills)
+                   get_cv_summary, get_job_summary, shorten, ExtractionSchemaFromCV, ExtractionPersonSkill, get_person_skill_matches, plot_people_skills)
 
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -28,9 +28,9 @@ def process_cv_files(pdf_files):
     return cv_texts
 
 
-async def get_people_summaries(cv_texts: List[str]) -> List[ExtractionSchema]:
-    system_prompt_person_summary = "You are an AI assistant whose task is to extract and summarize information written on a resume of a job seeker"
-    tasks = [get_cv_summary(system_prompt_person_summary, cv_text, ExtractionSchema) for cv_text in cv_texts]
+async def get_people_summaries(cv_texts: List[str]) -> List[ExtractionSchemaFromCV]:
+    system_prompt_person_summary = "You are an AI assistant whose task is to extract and summarize information written on a resume of a job applicant"
+    tasks = [get_cv_summary(system_prompt_person_summary, cv_text, ExtractionSchemaFromCV) for cv_text in cv_texts]
     return await asyncio.gather(*tasks)
 
 
@@ -44,12 +44,15 @@ async def main_function_gradio(job_description: str, pdf_files: List[str]) -> st
     return overall_overview
 
 
+st.title('ResumeGPT')
+st.markdown("This app powered by OpenAI GPT model, helps you as a recruiter to find the best applicant for a job description! Copy and paste the job description into the text field, and then upload the applicants' pdf resumes. ")
+
+st.markdown("you will receive a report, and below that, a plot showing who is better at which required skill!")
 
 with st.form("my_form"):
     c1, c2 = st.columns(2)
     with c1:
-        st.write("Inside the form")
-        job_description_st = st.text_area('Copy and paste the job description here:')
+        job_description_st = st.text_area('Copy and paste the full job posting description here:')
         uploaded_files = st.file_uploader('Upload up to 10 resume PDFs', accept_multiple_files=True)
 
 
