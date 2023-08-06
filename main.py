@@ -13,7 +13,8 @@ from utils import (clean_string, convert_elements_to_strings, get_best_candidate
                    get_cv_summary, get_job_summary, shorten, ExtractionSchemaFromCV, ExtractionPersonSkill, get_person_skill_matches, plot_people_skills)
 
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 st.set_page_config(page_title=None, page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
