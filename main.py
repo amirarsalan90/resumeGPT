@@ -13,7 +13,7 @@ from utils import (clean_string, convert_elements_to_strings, get_best_candidate
                    get_cv_summary, get_job_summary, shorten, ExtractionSchemaFromCV, ExtractionPersonSkill, get_person_skill_matches, plot_people_skills)
 
 
-os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
+#os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 openai.api_key = os.environ['OPENAI_API_KEY']
 
 st.set_page_config(page_title=None, page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -46,9 +46,20 @@ async def main_function_gradio(job_description: str, pdf_files: List[str]) -> st
 
 
 st.title('ResumeGPT')
-st.markdown("This app powered by OpenAI GPT model, helps you as a recruiter to find the best applicant for a job description! Copy and paste the job description into the text field, and then upload the applicants' pdf resumes. ")
+with st.sidebar:
+    st.title('ResumeGPT')
+    st.markdown("<small>:money_with_wings: Every time you use this app, I am being charged by the OpenAI API. Please consider donating [here](https://donate.stripe.com/cN2dUMe379mNcLu9AA) :moneybag: :pray:", unsafe_allow_html=True)
 
-st.markdown("you will receive a report, and below that, a plot showing who is better at which required skill!")
+
+    st.markdown("<small>:zap: Powered by the OpenAI GPT models, this app serves as your personal assistant in the recruitment process! Simply copy and paste the job description into the text field, then upload the applicants' resumes in pdf format, and press submit! :clipboard: :file_folder:", unsafe_allow_html=True)
+
+    st.write("<small>:bar_chart: You'll receive a report, along with an illustrative plot that compares the applicants' strengths in the required skills. This way, you can quickly identify the top talent for the job!", unsafe_allow_html=True)
+
+    st.markdown("<small>Created by Amirarsalan Rajabi :pencil2:</small>", unsafe_allow_html=True)
+    st.markdown("[GitHub](https://github.com/amirarsalan90)")
+    st.markdown("[Website](https://amirarsalan90.github.io)")
+
+
 
 with st.form("my_form"):
     c1, c2 = st.columns(2)
@@ -58,7 +69,7 @@ with st.form("my_form"):
 
 
     # Every form must have a submit button.
-        submitted = st.form_submit_button("Get Best Applicant")
+        submitted = st.form_submit_button("Submit")
     if submitted:
         with c2:
             with st.spinner('Generating Report....'):
