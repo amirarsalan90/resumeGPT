@@ -63,6 +63,7 @@ def get_job_summary(job_description: str) -> str:
     messages.append({"role": "system", "content": system_prompt})
     messages.append({"role": "user", "content": job_description})
     response = openai.ChatCompletion.create(
+        temperature = 0,
         model=GPT_MODEL_LONG,
         messages=messages)
     return response.choices[0].message.content
@@ -74,6 +75,7 @@ async def get_cv_summary(system_prompt: str, cv_text: str, extraction_pydantic_o
     messages.append({"role": "user", "content": cv_text})
 
     response = await openai.ChatCompletion.acreate(
+        temperature = 0,
         model=GPT_MODEL_SHORT,
         messages=messages,
         functions=[
@@ -109,6 +111,7 @@ def get_best_candidate(persons_result: List[Dict], job_desc_summary: str) -> str
     messages.append({"role": "system", "content": system_prompt})
     messages.append({"role": "user", "content": user_prompt})
     response = openai.ChatCompletion.create(
+        temperature = 0,
         model=GPT_MODEL_LONG,
         messages=messages)
     
@@ -123,6 +126,7 @@ def get_person_skill_matches(job_evaluation_text: str, extraction_pydantic_objec
     messages.append({"role": "user", "content": job_evaluation_text})
 
     response = openai.ChatCompletion.create(
+        temperature = 0,
         model="gpt-3.5-turbo-0613",
         messages=messages,
         functions=[
