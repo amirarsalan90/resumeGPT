@@ -1,20 +1,27 @@
+import asyncio
+import os
 import json
+from collections import defaultdict
 from typing import Dict, List, Type, Union
 
-import openai
+import streamlit as st
 from pydantic import BaseModel
+from pypdf import PdfReader
+import openai
 import tiktoken
-
-from matplotlib.figure import Figure
-
-import matplotlib.pyplot as plt
-from collections import defaultdict
-import numpy as np
-from matplotlib.patches import Patch
 import textwrap
 import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+from matplotlib.figure import Figure
 from matplotlib.font_manager import FontProperties
 from matplotlib.ticker import MaxNLocator
+
+
+#os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
+openai.api_key = st.secrets['OPENAI_API_KEY']
+#openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 # Constants
@@ -97,14 +104,14 @@ def get_best_candidate(persons_result: List[Dict], job_desc_summary: str) -> str
     persons_result_strings = convert_elements_to_strings(persons_result)
     messages=[]
     system_prompt = """
-    You are an AI assistant helping a HR recruiter find the best candidate for a job. After reviewing the job description, determine the essential characteristics and skills for the job, regardless of the number. Then identify the best candidate for each skill. Summarize this in a brief, concise manner. Do not make up any information. Here is the format:
+    "You are an AI assistant aiding an HR recruiter in identifying the ideal candidate for a job. After assessing the job description, pinpoint the crucial traits and skills required. For each skill, specify the best-suited candidate and give a brief reason. Present this in a short, structured manner using **markdown** formatting. Do not invent information. Follow this format:
 
-    Essential Skill 1 (e.g., "Software Engineering skills"): Best candidate is Person X because...
-    Essential Skill 2 (e.g., "Education"): Best candidate is Person X because...
-    Essential Skill 3 (e.g., "Knowledge of programming languages"): Best candidate is Person Y because...
-    Essential Skill 4 (e.g., "Leadership"): Best candidate is Person Z because...
+    **Essential Skill 1** (e.g., "Software Engineering skills"): Best candidate is **Person X** because...
+    **Essential Skill 2** (e.g., "Education"): Best candidate is **Person X** because...
+    **Essential Skill 3** (e.g., "Programming knowledge"): Best candidate is **Person Y** because...
+    **Essential Skill 4** (e.g., "Leadership"): Best candidate is **Person Z** because...
 
-    Overall: Person X is the best candidate because...
+    **Overall**: **Person X** is the most suitable due to..."
     """
     user_prompt = f"The job description: \n{job_desc_summary}"
     user_prompt += "\n\n".join(f"{person}\n" for person in persons_result_strings)
@@ -204,3 +211,64 @@ def plot_people_skills(data: Dict[str, List[Dict[str, str]]]) -> Figure:
     ax.grid(True)
     plt.tight_layout()
     return fig
+
+
+
+
+
+st.set_page_config(page_title="recruiter", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
+
+def process_cv_files(pdf_files):
+    cv_texts = []
+    for i in pdf_files:
+        pdf = PdfReader(i)
+        text = ""
+        for page in pdf.pages:
+            text += page.extract_text()
+        cv_texts.append(clean_string(text))
+    return cv_texts
+
+
+async def get_people_summaries(cv_texts: List[str]) -> List[ExtractionSchemaFromCV]:
+    system_prompt_person_summary = "You are an AI assistant whose task is to extract and summarize information written on a resume of a job applicant"
+    tasks = [get_cv_summary(system_prompt_person_summary, cv_text, ExtractionSchemaFromCV) for cv_text in cv_texts]
+    return await asyncio.gather(*tasks)
+
+
+
+async def main_function_gradio(job_description: str, pdf_files: List[str]) -> str:
+    job_desc_summary = get_job_summary(job_description)
+    cv_texts = process_cv_files(pdf_files)
+    people_summaries = await get_people_summaries(cv_texts)
+    overall_overview = get_best_candidate(people_summaries, job_desc_summary)
+
+    return overall_overview
+
+
+st.title('Finding the best candiate:')
+
+
+
+
+with st.form("my_form"):
+    c1, c2 = st.columns(2)
+    with c1:
+        job_description_st = st.text_area('Copy and paste the full job posting description here:')
+        uploaded_files = st.file_uploader('Upload up to 10 resume PDFs', accept_multiple_files=True)
+
+
+    # Every form must have a submit button.
+        submitted = st.form_submit_button("Submit")
+    if submitted:
+        with c2:
+            with st.spinner('Generating Report....'):
+                #pdf_files_texts = process_cv_files(uploaded_files)
+                candidates_report = asyncio.run(main_function_gradio(job_description_st, uploaded_files))
+                st.write(candidates_report)
+            with st.spinner('Plotting people skills....'):
+                res = get_person_skill_matches(candidates_report, ExtractionPersonSkill)
+                st.write("---")
+                #st.write(res)
+                fig = plot_people_skills(res)
+
+                st.pyplot(fig)
