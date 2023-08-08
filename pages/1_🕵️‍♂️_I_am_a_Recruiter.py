@@ -20,8 +20,8 @@ from matplotlib.ticker import MaxNLocator
 
 
 #os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
-openai.api_key = st.secrets['OPENAI_API_KEY']
-#openai.api_key = os.environ['OPENAI_API_KEY']
+#openai.api_key = st.secrets['OPENAI_API_KEY']
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 # Constants
@@ -245,7 +245,8 @@ async def main_function_gradio(job_description: str, pdf_files: List[str]) -> st
     return overall_overview
 
 
-st.title('Finding the best candiate:')
+st.title('You are a recruiter: finding the best candiate:')
+st.markdown('Copy and paste the job description in the text field below, and upload up to 10 resume pdfs of applicants. GPT will extract information from those resumes and tell you for each required skill for that job description, which applicant is the strongest.')
 
 
 

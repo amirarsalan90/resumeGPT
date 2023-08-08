@@ -20,8 +20,8 @@ from matplotlib.ticker import MaxNLocator
 
 
 #os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
-openai.api_key = st.secrets['OPENAI_API_KEY']
-#openai.api_key = os.environ['OPENAI_API_KEY']
+#openai.api_key = st.secrets['OPENAI_API_KEY']
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 # Constants
@@ -126,15 +126,17 @@ st.set_page_config(page_title="recruiter", page_icon=None, layout="wide", initia
 
 async def main_function_gradio(job_description: str, pdf_file) -> str:
     cv_text = process_cv_file(pdf_file)
-    job_desc_summary = await get_job_summary(job_description)
-    person_summary = await get_cv_summary(cv_text, ExtractionSchemaFromCV)
+    #job_desc_summary = await get_job_summary(job_description)
+    #person_summary = await get_cv_summary(cv_text, ExtractionSchemaFromCV)
+    tasks = [get_job_summary(job_description), get_cv_summary(cv_text, ExtractionSchemaFromCV)]
+    job_desc_summary, person_summary = await asyncio.gather(*tasks)
     overall_overview = get_overal_person_suggestion(job_desc_summary, person_summary)
 
     return overall_overview
 
 
-st.title('I am an applicant:')
-
+st.title('Your are a job applicant:')
+st.markdown('copy and paste the job description that you are applying for in the text field below. Then upload your resume, and GPT will tell you how to modify your resume to better match that job description.')
 
 
 
