@@ -16,7 +16,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<p class="bigger-font">\U000026A1 Powered by the OpenAI GPT models, this app serves as your personal assistant in the recruitment or job applicaiton process! </p>', unsafe_allow_html=True)
+st.markdown('<p class="bigger-font">\U000026A1 Powered by the OpenAI GPT models, this app serves as your personal assistant in the recruitment or job application process! </p>', unsafe_allow_html=True)
 
 st.markdown('<p class="big-font"> <a href="https://resumegpt.streamlit.app/I_am_a_Recruiter"><strong>If you are a recruiter</strong></a>, copy and paste the job description into the text field, then upload the applicants\' resumes in pdf format, and press submit! You\'ll receive a report \U0001F4C1, along with an illustrative plot \U0001F4CA that compares the applicants\' strengths in the required skills. This way, you can quickly identify the top talent for the job!</p>', unsafe_allow_html=True)
 
