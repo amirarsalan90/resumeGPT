@@ -104,7 +104,7 @@ def get_best_candidate(persons_result: List[Dict], job_desc_summary: str) -> str
     persons_result_strings = convert_elements_to_strings(persons_result)
     messages=[]
     system_prompt = """
-    "You are an AI assistant aiding an HR recruiter in identifying the ideal candidate for a job. After assessing the job description, pinpoint the crucial traits and skills required. For each skill, specify the best-suited candidate and give a brief reason. Present this in a short, structured manner using **markdown** formatting. Do not invent information. Follow this format:
+    "You are an AI assistant aiding an HR recruiter in identifying the ideal candidate for a job. After assessing the job description, pinpoint the crucial traits and skills required. For each skill, specify the best-suited candidate and give a brief reason. Present this in a short, structured manner using **markdown** formatting. Do not invent information! Follow this format:
 
     **Essential Skill 1** (e.g., "Software Engineering skills"): Best candidate is **Person X** because...
     **Essential Skill 2** (e.g., "Education"): Best candidate is **Person X** because...
