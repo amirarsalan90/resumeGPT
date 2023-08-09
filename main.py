@@ -1,6 +1,10 @@
 import streamlit as st
+import sys, os
 
-st.set_page_config(page_title="recruiter", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(script_dir, 'pages'))
+
+st.set_page_config(page_title="recruiter", page_icon="./logo.png", layout="wide", initial_sidebar_state="auto", menu_items=None)
 st.title('resumeGPT')
 
 st.markdown("""
@@ -15,6 +19,8 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
 
 st.markdown('<p class="bigger-font">\U000026A1 Powered by the OpenAI GPT models, this app serves as your personal assistant in the recruitment or job application process! </p>', unsafe_allow_html=True)
 
