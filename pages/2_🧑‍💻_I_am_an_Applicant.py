@@ -12,7 +12,7 @@ openai.api_key = os.environ['OPENAI_API_KEY']
 
 from utils import shorten, clean_string, get_job_summary, get_cv_summary_2, process_cv_file_single, get_overal_person_suggestion, ExtractionSchemaFromCV2, GPT_MODEL_SHORT, GPT_MODEL_LONG, MAX_TOKENS
 
-st.set_page_config(page_title="recruiter", page_icon="../logo.png", layout="wide", initial_sidebar_state="auto", menu_items=None)
+st.set_page_config(page_title="applicant", page_icon="../logo.png", layout="wide", initial_sidebar_state="auto", menu_items=None)
     
 
 async def main_function_gradio(job_description: str, pdf_file) -> str:
