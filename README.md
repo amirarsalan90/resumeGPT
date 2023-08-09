@@ -11,5 +11,5 @@ Then, export your OpenAI API key to OPENAI_API_KEY evironment variable.
 Finally, ```./run.sh``` and your app will be up and running!
 
 A live demo is available here:
-[resumegpt.streamlit.app](resumegpt.streamlit.app)
+[https://resumegpt.streamlit.app](https://resumegpt.streamlit.app)
 
