@@ -6,8 +6,8 @@ import openai
 
 
 #os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
-#openai.api_key = st.secrets['OPENAI_API_KEY']
-openai.api_key = os.environ['OPENAI_API_KEY']
+openai.api_key = st.secrets['OPENAI_API_KEY']
+#openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 from utils import shorten, clean_string, get_job_summary, get_cv_summary_2, process_cv_file_single, get_overal_person_suggestion, ExtractionSchemaFromCV2, GPT_MODEL_SHORT, GPT_MODEL_LONG, MAX_TOKENS
